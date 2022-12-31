@@ -2,6 +2,9 @@ package id.zaien.lab;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 public class RecursiveTests {
@@ -104,7 +107,7 @@ public class RecursiveTests {
 	void choosingSubsetTest() {
 
 		// N-choose-K, written as C(n,k) --> combination of k from n.
-		// example, choose a team member consist of 4 people from 60 total peoples.
+		// example, choose a team member consist of 2 people from 4 total peoples.
 		
 		int permutation = c(4, 2);
 
@@ -117,6 +120,60 @@ public class RecursiveTests {
 			return 1;
 		else
 			return c(n-1, k) + c(n-1, k-1);
+	}
+	
+	@Test
+	void printCombinationTest() {
+		// N-choose-K, written as C(n,k) --> combination of k from n.
+		// example, choose a team member consist of 2 people from 4 total peoples.
+		
+		String expected = "1 2 \r\n"
+				+ "1 3 \r\n"
+				+ "1 4 \r\n"
+				+ "2 3 \r\n"
+				+ "2 4 \r\n"
+				+ "3 4 \r\n"
+				+ "---";
+		
+		List<List<Integer>> result = combine(4,2);
+		
+		StringBuilder actual = new StringBuilder();
+		for (List<Integer> comb : result) {
+			for (int i : comb) {
+				actual.append(i + " ");
+			}
+			
+			actual.append(System.lineSeparator());
+		}
+		
+		actual.append("---");
+		
+		assertThat(actual.toString()).isEqualTo(expected);
+	}
+
+	private List<List<Integer>> combine(int n, int k) {
+		List<List<Integer>> result = new LinkedList<>();
+		
+		if (k==0) {
+			result.add(new LinkedList<>());
+			return result;
+		}
+		
+		backtrack(1, new LinkedList<Integer>(), n, k, result);
+		
+		return result;
+	}
+
+	private void backtrack(int start, LinkedList<Integer> current, int n, int k, List<List<Integer>> result) {
+		
+		if (current.size()==k)
+			result.add(new LinkedList<>(current));
+		
+		for (int i=start; i<=n && current.size()<k; i++) {
+			current.add(i);
+			backtrack(i+1, current, n, k, result);
+			current.removeLast();
+		}
 	}
 
 }
