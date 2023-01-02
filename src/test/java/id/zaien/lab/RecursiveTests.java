@@ -223,5 +223,21 @@ public class RecursiveTests {
 			}
 		}
 	}
+	
+	@Test
+	void subsetsTest() {
+		
+		recSubsets("", "ABCD");
+	}
+
+	private void recSubsets(String sofar, String rest) {
+		
+		if (rest.isEmpty())
+			System.out.println(sofar);
+		else {
+			recSubsets(sofar+rest.charAt(0), rest.substring(1));
+			recSubsets(sofar, rest.substring(1));
+		}
+	}
 
 }
