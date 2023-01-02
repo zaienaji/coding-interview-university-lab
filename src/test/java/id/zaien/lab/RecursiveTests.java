@@ -239,5 +239,33 @@ public class RecursiveTests {
 			recSubsets(sofar, rest.substring(1));
 		}
 	}
+	
+	@Test
+	void anagramTest() {
+		Lexicon lexicon = new Lexicon("lexicon.txt");
+		
+		boolean isAnagram = isAnagram("", "toon", lexicon);
+		
+		assertThat(isAnagram).isTrue();
+	}
+
+	private boolean isAnagram(String sofar, String rest, Lexicon lexicon) {
+		
+		if (rest.isEmpty()) {
+			if (lexicon.isContainWord(sofar)) {
+				System.out.println(sofar);
+				return true;
+			}
+		} else {
+			for (int i=0; i<rest.length(); i++) {
+				String next = sofar + rest.charAt(i);
+				String remaining = rest.substring(0, i)+rest.substring(i+1);
+				
+				if (isAnagram(next, remaining, lexicon)) return true;
+			}
+		}
+		
+		return false;
+	}
 
 }
