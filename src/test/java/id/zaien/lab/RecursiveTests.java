@@ -109,9 +109,9 @@ public class RecursiveTests {
 		// N-choose-K, written as C(n,k) --> combination of k from n.
 		// example, choose a team member consist of 2 people from 4 total peoples.
 		
-		int permutation = c(4, 2);
+		int combination = c(4, 2);
 
-		assertThat(permutation).isEqualTo(6);
+		assertThat(combination).isEqualTo(6);
 	}
 	
 	private int c(int n, int k) {
@@ -135,7 +135,7 @@ public class RecursiveTests {
 				+ "3 4 \r\n"
 				+ "---";
 		
-		List<List<Integer>> result = combine(4,2);
+		List<List<Integer>> result = combine(4, 2);
 		
 		StringBuilder actual = new StringBuilder();
 		for (List<Integer> comb : result) {
@@ -173,6 +173,54 @@ public class RecursiveTests {
 			current.add(i);
 			backtrack(i+1, current, n, k, result);
 			current.removeLast();
+		}
+	}
+	
+	@Test
+	void permutationTest() {
+		String expected = "ABCD\r\n"
+				+ "ABDC\r\n"
+				+ "ACBD\r\n"
+				+ "ACDB\r\n"
+				+ "ADBC\r\n"
+				+ "ADCB\r\n"
+				+ "BACD\r\n"
+				+ "BADC\r\n"
+				+ "BCAD\r\n"
+				+ "BCDA\r\n"
+				+ "BDAC\r\n"
+				+ "BDCA\r\n"
+				+ "CABD\r\n"
+				+ "CADB\r\n"
+				+ "CBAD\r\n"
+				+ "CBDA\r\n"
+				+ "CDAB\r\n"
+				+ "CDBA\r\n"
+				+ "DABC\r\n"
+				+ "DACB\r\n"
+				+ "DBAC\r\n"
+				+ "DBCA\r\n"
+				+ "DCAB\r\n"
+				+ "DCBA\r\n"
+				+ "";
+		
+		StringBuilder permutation = new StringBuilder();
+		permute("", "ABCD", permutation);
+		
+		assertThat(permutation.toString()).isEqualTo(expected);
+	}
+
+	private void permute(String sofar, String rest, StringBuilder permutation) {
+		
+		if (rest.isEmpty())
+			permutation.append(sofar).append(System.lineSeparator());
+		else {
+			for (int i=0; i<rest.length(); i++) {
+				String next = sofar + rest.charAt(i);
+				String remaining = rest.substring(0, i)+rest.substring(i+1);
+				
+				permute(next, remaining, permutation);
+			}
 		}
 	}
 
