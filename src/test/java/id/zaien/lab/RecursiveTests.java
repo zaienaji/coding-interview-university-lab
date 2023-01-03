@@ -204,22 +204,24 @@ public class RecursiveTests {
 				+ "DCBA\r\n"
 				+ "";
 		
-		StringBuilder permutation = new StringBuilder();
+		List<String> permutation = new LinkedList<>();
 		permute("", "ABCD", permutation);
 		
-		assertThat(permutation.toString()).isEqualTo(expected);
+		StringBuilder actual = new StringBuilder();
+		permutation.stream().forEach(s -> actual.append(s).append(System.lineSeparator()));
+		assertThat(actual.toString()).isEqualTo(expected);
 	}
 
-	private void permute(String sofar, String rest, StringBuilder permutation) {
+	private void permute(String sofar, String rest, List<String> result) {
 		
 		if (rest.isEmpty())
-			permutation.append(sofar).append(System.lineSeparator());
+			result.add(sofar);
 		else {
 			for (int i=0; i<rest.length(); i++) {
 				String next = sofar + rest.charAt(i);
 				String remaining = rest.substring(0, i)+rest.substring(i+1);
 				
-				permute(next, remaining, permutation);
+				permute(next, remaining, result);
 			}
 		}
 	}
@@ -297,6 +299,66 @@ public class RecursiveTests {
 		}
 		
 		return false;
+	}
+	
+	@Test
+	void memoizedChoosingSubsetTest() {
+
+		// N-choose-K, written as C(n,k) --> combination of k from n.
+		// example, choose a team member consist of 2 people from 4 total peoples.
+		
+		// Memorized in a table n-k
+		int n=4;
+		int k=2;
+		
+		int[][] result = new int[n+1][n+1];
+		initCTable(result);
+		
+		System.out.println("before memorized:");
+		print(result);
+		
+		int combination = memoizedC(n, k, result);
+		
+		System.out.println();
+		System.out.println("after memorized:");
+		print(result);
+		
+		assertThat(combination).isEqualTo(6);
+	}
+
+	private void print(int[][] data) {
+		for (int i=0; i<data.length; i++) {
+			int[] row = data[i];
+			
+			for (int j=0; j<row.length; j++) {
+				System.out.print(data[i][j]+" ");
+			}
+			
+			System.out.println();
+		}
+	}
+	
+	private void initCTable(int[][] result) {
+		int size = result.length;
+		
+		for (int i=0; i<size; i++) {
+			result[i][0]=1;
+			result[i][i]=1;
+		}
+		
+	}
+
+	private int memoizedC(int n, int k, int[][] result) {
+		
+		if (result[n][k]!=0)
+			return result[n][k];
+		else {
+			int sofar = memoizedC(n-1, k, result) + memoizedC(n-1, k-1, result);
+			result[n][k] = sofar;
+			
+			return sofar;
+		}
+			
 	}
 
 }
