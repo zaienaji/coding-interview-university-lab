@@ -267,5 +267,36 @@ public class RecursiveTests {
 		
 		return false;
 	}
+	
+	@Test
+	void nqueenTest() {
+		int size=4;
+		Board board = new Board(size, size);
+		
+		solve(board, 1);
+		
+		int[] result = board.result();
+		assertThat(result[0]).isEqualTo(2);
+		assertThat(result[1]).isEqualTo(4);
+		assertThat(result[2]).isEqualTo(1);
+		assertThat(result[3]).isEqualTo(3);
+	}
+
+	private boolean solve(Board board, int column) {
+		
+		if (column > board.columnSize()) return true;
+		
+		for (int rowToTry=1; rowToTry<=board.rowSize(); rowToTry++) {
+			if (board.isSavePosition(column, rowToTry)) {
+				board.addQueen(column, rowToTry);
+				
+				if (solve(board, column+1)) return true;
+				
+				board.removeQueen(column);
+			}
+		}
+		
+		return false;
+	}
 
 }
